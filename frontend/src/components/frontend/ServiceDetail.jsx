@@ -1,0 +1,167 @@
+import React, { useEffect, useState } from 'react'
+import Header from '../common/Header'
+import Hero from '../common/Hero';
+import Footer from '../common/Footer'
+import { Link, useParams } from 'react-router-dom';
+import { apiUrl, fileUrl } from '../common/http'
+import ShowTestimonials from '../common/ShowTestimonials';
+import ReactPlayer from 'react-player'
+
+const ServiceDetail = () => {
+
+   const[service, setService] = useState([])
+   const[services, setServices] = useState([])
+   const params = useParams();
+   const [loading, setLoading] = useState(false);
+   
+   const fetchService = async () => {
+      setLoading(true);
+      try {
+         const res = await fetch(`${apiUrl}get-service/${params.id}`, {
+            'method' : 'GET'
+         });
+         const result = await res.json();
+         // console.log(result);
+         setService(result.data);
+      } catch (error) {
+         toast.error("Failed to load service");
+      } finally {
+         setLoading(false);
+      }
+   }
+   
+   const fetchAllServices = async () => {
+      const res = await fetch(`${apiUrl}get-services`, {
+         'method' : 'GET'
+      });
+      const result = await res.json();
+      // console.log(result);
+      setServices(result.data);
+   }
+   useEffect(() => {
+      fetchService()
+      fetchAllServices();
+   }, [params.id]);
+
+
+   const videoId = service?.video ? getYoutubeId(service.video) : null;
+   const [play, setPlay] = useState(false);
+   function getYoutubeId(url) {
+      const regExp =
+         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+      const match = url.match(regExp);
+      return match ? match[1] : null;
+   }
+
+   return (
+      <>
+         <Header/>
+         <main>
+            <Hero preHeading='Innovation. Expertise. Trust.'
+            heading={`${service.title}`}
+            text=''
+            />
+            <section className='section-10'>
+
+               <div className='container py-5'>
+                  <div className='row'>
+                     <div className='col-md-3 mb-3'>
+                        <div className='card shadow border-0 sidebar'>
+                           <div className='card-body px-4 py-4'>
+                              <h3 className='mt-2 mb-3'>Our Services</h3>
+                              <ul>
+                                 {
+                                    services && services.map(service => {
+                                       return (
+                                          <li key={`service-${service.id}`}>
+                                             <Link to={`/service/${service.id}`}>{service.title}</Link>
+                                          </li>
+                                       )
+                                    })
+                                 }
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                     <div className='col-md-9'>
+                        {/* Video */}
+                        <div>
+                           {loading && (
+                              <div className="text-center py-4">
+                                 <div className="spinner-border text-primary" role="status"></div>
+                              </div>
+                           )}
+
+                           {!loading && service.length === 0 && (
+                              <div className="text-center py-4">
+                                 No service found
+                              </div>
+                           )}
+
+                           { !loading && service?.video ? (
+                              <div className="w-100 h-100">
+                                 {!play ? (
+                                    <div
+                                       className="position-relative cursor-pointer"
+                                       onClick={() => setPlay(true)}
+                                    >
+                                       {/* Poster */}
+                                       <img
+                                       src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                                       alt="YouTube Poster"
+                                       className="img-fluid w-100 h-100 rounded"
+                                       />
+
+                                       {/* Play Icon */}
+                                       <span
+                                       className="position-absolute top-50 start-50 translate-middle 
+                                                   fs-1 text-white bg-dark bg-opacity-50 
+                                                   rounded-circle d-flex align-items-center 
+                                                   justify-content-center"
+                                       style={{ width: "80px", height: "80px" }}
+                                       >
+                                       ▶
+                                       </span>
+                                    </div>
+                                 ) : (
+                                    <div className="ratio ratio-16x9">
+                                       <iframe
+                                       src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
+                                       title="YouTube video"
+                                       allow="autoplay; encrypted-media"
+                                       allowFullScreen
+                                       ></iframe>
+                                    </div>
+                                 )}
+                                 </div>
+                           ) :  !loading && service?.image ? (
+                              <img
+                                 src={`${fileUrl}uploads/services/large/${service.image}`}
+                                 alt={service.title || "Service Image"}
+                                 className="w-100"
+                              />
+                           ) : null}
+                        </div>
+                        {!loading && service?.title && (
+                           <h3 className='py-3'>{service.title}</h3>
+                        )}
+                        {/* <div>
+                           {service.short_desc}
+                        </div> */}
+                        {!loading && service?.content && (
+                           <div dangerouslySetInnerHTML={{ __html: service.content }}></div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            </section>
+            <section className='section-11 bg-light py-5'>
+               <ShowTestimonials/>
+            </section>
+         </main>
+         <Footer/>
+      </>
+   )
+}
+
+export default ServiceDetail

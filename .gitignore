@@ -1,0 +1,14 @@
+# React
+node_modules/
+npm-debug.log*
+frontend/build/
+
+# Laravel
+vendor/
+.env
+/storage/*.key
+backend/public/storage/
+
+# OS
+.DS_Store
+Thumbs.db
