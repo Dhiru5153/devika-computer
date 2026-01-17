@@ -12,12 +12,15 @@ const About = () => {
                 </div>
                 <div className='col-md-6 mb-3'>
                     <span>About Us</span>
-                    <h2>The most trusted computer and electronics shop</h2>
+                    <h2>Computer & IT Service</h2>
                     <p>
-                        New Computer, Laptop, Printer & Accessories
-                        <br/>Repairing with Expert Touch
-                        <br/>CCTV Installation - Analog & IP Cameras
-                        <br/>Fast & Reliable Computer Support
+                        We are a reliable computer and electronics service shop committed to delivering
+                        high-quality repair and IT solutions. From computer and laptop repairs to printers,
+                        accessories, CCTV installations, and networking support, we ensure fast, affordable,
+                        and professional service for both homes and businesses.
+                        <br/><br/>
+                        Our experienced technicians focus on accurate diagnosis, genuine parts, and
+                        customer satisfaction to keep your systems running smoothly and securely.
                     </p>
                 </div>
             </div>

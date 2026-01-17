@@ -9,26 +9,54 @@ import LatestServices from '../common/LatestServices';
 import LatestProjects from '../common/LatestProjects';
 import LatestBlogs from '../common/LatestBlogs';
 import ShowTestimonials from '../common/ShowTestimonials';
+import { Commet } from "react-loading-indicators";
+
+const styles = {
+   overlay: {
+      position: "fixed",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+   }
+};
 
 export const Home = () => {
+   const [loading, setLoading] = useState(true);
+   useEffect(() => {
+      const timer = setTimeout(() => {
+         setLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+   }, []);
 
 
    return (
    <>
       <Header/>
-      <main>
+      <main
+         style={{
+            filter: loading ? "blur(4px)" : "none",
+            transition: "filter 0.3s ease",
+            pointerEvents: loading ? "none" : "auto"
+         }}
+      >
          {/* Hero Section */}
          <section className='section-1'>
                <div className='hero d-flex align-items-center py-5'>
                   <div className='container-fluid'>
                      <div className='text-center'>
                            <span>Welcome To Devika Computer</span>
-                           <h1>The most trusted computer and electronics shop</h1>
+                           <h1>Reliable Computer & IT Service Experts</h1>
                            <p>
-                              New Computer, Laptop, Printer & Accessories
-                              <br/>Repairing with Expert Touch
-                              <br/>CCTV Installation - Analog & IP Cameras
-                              <br/>Fast & Reliable Computer Support
+                              Computer, Laptop, Printer & Accessories Repair
+                              Expert Diagnostics & Reliable Solutions
+                              CCTV Installation – Analog & IP Camera Systems
+                              Fast, Affordable & Trusted IT Support
                            </p>
                            <div className='mt-4'>
                               <a href="/contact" className='btn btn-primary large'>Contact Now</a>
@@ -101,6 +129,16 @@ export const Home = () => {
          <LatestBlogs/>
          
       </main>
+      {loading && (
+         <div style={styles.overlay}>
+            <Commet
+            color="#0d6efd"
+            size="large"
+            text="PLEASE WAIT"
+            textColor="#0d6efd"
+            />
+         </div>
+      )}
       <Footer/>
    </>
    )

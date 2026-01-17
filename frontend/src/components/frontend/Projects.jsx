@@ -5,9 +5,26 @@ import Hero from '../common/Hero'
 import { apiUrl, fileUrl } from '../common/http'
 import { Link } from 'react-router-dom';
 import DefaultImage from '../../assets/images/default-project.jpeg';
+import { Commet } from "react-loading-indicators";
+
+const styles = {
+   overlay: {
+      position: "fixed",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+   }
+};
+
 
 const Projects = () => {
    const [projects, setProjects] = useState([]);
+   const [loading, setLoading] = useState(true);
    
    const fetchProjects = async () => {
       const res = await fetch(apiUrl+'get-projects', {
@@ -23,24 +40,39 @@ const Projects = () => {
 
    useEffect( () => {
       fetchProjects()
+      const timer = setTimeout(() => {
+         setLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
    }, []);
    
    return (
    <>
       <Header/>
-      <main>
-         <Hero preHeading='Work. Impact. Results.'
+      <main
+         style={{
+            filter: loading ? "blur(4px)" : "none",
+            transition: "filter 0.3s ease",
+            pointerEvents: loading ? "none" : "auto"
+         }}
+      >
+         <Hero preHeading='Work. Expertise. Results.'
          heading='Our Projects'
-         text='Discover our completed projects in computer repairing, CCTV setup,
-               networking, and IT services executed with quality and reliability.'
+         text='Explore our successfully delivered projects in computer & laptop repair,
+            printer servicing, CCTV installation, networking, and complete IT support
+            for homes and businesses.'
          />
          {/* Our Project Section */}
          <section className='section-3 bg-light py-5'>
                <div className='container py-5'>
                   <div className='section-header text-center'>
-                     <span>Our Projects</span>
-                     <h2>Our Devika Computer Projects</h2>
-                     <p>Computer, Laptop, Printer, CCTV, Networking, Repairing And Services</p>
+                     <span>Our Work</span>
+                     <h2>Devika Computer Projects</h2>
+                     <p>
+                        Professional projects including computer & laptop repairs,
+                        printer servicing, CCTV setup, networking solutions,
+                        and reliable IT services delivered with quality workmanship.
+                     </p>
                   </div>
                   <div className='row pt-4'>
                      {
@@ -81,6 +113,16 @@ const Projects = () => {
          </section>
       
       </main>
+      {loading && (
+         <div style={styles.overlay}>
+            <Commet
+            color="#0d6efd"
+            size="large"
+            text="PLEASE WAIT"
+            textColor="#0d6efd"
+            />
+         </div>
+      )}
       <Footer/>
    </>
    )

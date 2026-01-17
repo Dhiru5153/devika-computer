@@ -5,6 +5,21 @@ import Sidebar from '../../common/Sidebar'
 import { apiUrl, token } from '../../common/http'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { Commet } from "react-loading-indicators";
+
+const styles = {
+	overlay: {
+		position: "fixed",
+		inset: 0,
+		backgroundColor: "rgba(0,0,0,0.35)",
+		backdropFilter: "blur(6px)",
+		WebkitBackdropFilter: "blur(6px)",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		zIndex: 9999
+	}
+};
 
 const Show = () => {
 	const [members, setMembers] = useState([]);
@@ -61,12 +76,22 @@ const Show = () => {
 
 	useEffect(() => {
 		fetchMembers();
+		const timer = setTimeout(() => {
+			setLoading(false);
+		}, 1500);
+		return () => clearTimeout(timer);
 	}, []);
 
 	return (
 		<>
 			<Header/>
-			<main>
+			<main
+				style={{
+				filter: loading ? "blur(4px)" : "none",
+				transition: "filter 0.3s ease",
+				pointerEvents: loading ? "none" : "auto"
+				}}
+			>
 				<div className='container my-5'>
 						<div className='row'>
 							<div className='col-md-3 mb-3'>
@@ -95,13 +120,13 @@ const Show = () => {
 													</tr>
 												</thead>
 												<tbody>
-													{loading && (
+													{/* {loading && (
 														<tr>
 														<td colSpan="5" className="text-center py-4">
 															<div className="spinner-border text-primary" role="status"></div>
 														</td>
 														</tr>
-													)}
+													)} */}
 
 													{!loading && members.length === 0 && (
 														<tr>
@@ -141,6 +166,16 @@ const Show = () => {
 						</div>
 				</div>
 			</main>
+			{loading && (
+				<div style={styles.overlay}>
+				<Commet
+				color="#0d6efd"
+				size="large"
+				text="PLEASE WAIT"
+				textColor="#0d6efd"
+				/>
+				</div>
+			)}
 			<Footer/>
 		</>
 	)

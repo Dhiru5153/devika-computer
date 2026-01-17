@@ -5,9 +5,25 @@ import Hero from '../common/Hero';
 import { apiUrl, fileUrl, token } from '../common/http';
 import { Link } from 'react-router-dom';
 import DefaultImage from '../../assets/images/default-article.jpg';
+import { Commet } from "react-loading-indicators";
+
+const styles = {
+   overlay: {
+      position: "fixed",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+   }
+};
 
 const Blogs = () => {
    const[articles, setArticles] = useState([])
+   const [loading, setLoading] = useState(true);
    
    const fetchLatestArticles = async () => {
       const res = await fetch(apiUrl+'get-latest-articles', {
@@ -19,24 +35,38 @@ const Blogs = () => {
    }
 
    useEffect(() => {
-      fetchLatestArticles()
+      fetchLatestArticles();
+      const timer = setTimeout(() => {
+         setLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
    }, []);
 
    return (
    <>
       <Header/>
-      <main>
-         <Hero preHeading='Learn. Explore. Inspire.'
-         heading='Blogs'
-         text='Stay updated with expert blogs on computer repair, CCTV systems,
-               networking, and smart IT solutions for home and business users.'
+      <main
+         style={{
+            filter: loading ? "blur(4px)" : "none",
+            transition: "filter 0.3s ease",
+            pointerEvents: loading ? "none" : "auto"
+         }}
+      >
+         <Hero preHeading='Learn. Explore. Stay Updated.'
+         heading='Tech Blogs & Insights'
+         text='Read expert articles on computer & laptop repair, CCTV installation,
+               networking solutions, and smart IT tips to keep your home and business running smoothly.'
          />
          <section className='section-6 bg-light py-5'>
                <div className='container'>
                   <div className='section-header text-center'>
-                     <span>Blog & News</span>
-                     <h2>Articles & Blog Posts</h2>
-                     <p>Discover our wide variety of computer repair, networking, and IT service projects tailored for homes and businesses.</p>
+                     <span>Tech Blog & Updates</span>
+                     <h2>Computer Service Articles & Tips</h2>
+                     <p>
+                        Explore informative blogs covering computer repairs, IT support,
+                        CCTV security systems, networking solutions, and the latest
+                        technology trends for homes and businesses.
+                     </p>
                   </div>
                   <div className='row pt-3'>
                      {
@@ -73,6 +103,16 @@ const Blogs = () => {
                </div>
          </section>
       </main>
+      {loading && (
+         <div style={styles.overlay}>
+            <Commet
+            color="#0d6efd"
+            size="large"
+            text="PLEASE WAIT"
+            textColor="#0d6efd"
+            />
+         </div>
+      )}
       <Footer/>
    </>
    )

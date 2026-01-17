@@ -6,6 +6,21 @@ import { Link, useParams } from 'react-router-dom';
 import { apiUrl, fileUrl } from '../common/http'
 import ShowTestimonials from '../common/ShowTestimonials';
 import ReactPlayer from 'react-player'
+import { Commet } from "react-loading-indicators";
+
+const styles = {
+   overlay: {
+      position: "fixed",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+   }
+};
 
 const ServiceDetail = () => {
 
@@ -39,8 +54,13 @@ const ServiceDetail = () => {
       setServices(result.data);
    }
    useEffect(() => {
-      fetchService()
+      fetchService();
       fetchAllServices();
+      
+      const timer = setTimeout(() => {
+         setLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
    }, [params.id]);
 
 
@@ -56,7 +76,13 @@ const ServiceDetail = () => {
    return (
       <>
          <Header/>
-         <main>
+         <main
+            style={{
+               filter: loading ? "blur(4px)" : "none",
+               transition: "filter 0.3s ease",
+               pointerEvents: loading ? "none" : "auto"
+            }}
+         >
             <Hero preHeading='Innovation. Expertise. Trust.'
             heading={`${service.title}`}
             text=''
@@ -86,11 +112,11 @@ const ServiceDetail = () => {
                      <div className='col-md-9'>
                         {/* Video */}
                         <div>
-                           {loading && (
+                           {/* {loading && (
                               <div className="text-center py-4">
                                  <div className="spinner-border text-primary" role="status"></div>
                               </div>
-                           )}
+                           )} */}
 
                            {!loading && service.length === 0 && (
                               <div className="text-center py-4">
@@ -159,6 +185,16 @@ const ServiceDetail = () => {
                <ShowTestimonials/>
             </section>
          </main>
+         {loading && (
+            <div style={styles.overlay}>
+               <Commet
+               color="#0d6efd"
+               size="large"
+               text="PLEASE WAIT"
+               textColor="#0d6efd"
+               />
+            </div>
+         )}
          <Footer/>
       </>
    )

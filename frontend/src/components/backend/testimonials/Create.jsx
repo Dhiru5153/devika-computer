@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useRef, useMemo, useEffect } from 'react'
 import Header from '../../common/Header'
 import Sidebar from '../../common/Sidebar'
 import Footer from '../../common/Footer'
@@ -7,12 +7,28 @@ import { useForm } from "react-hook-form"
 import { apiUrl, token } from '../../common/http'
 import { toast } from 'react-toastify'
 import JoditEditor from 'jodit-react'
+import { Commet } from "react-loading-indicators";
+
+const styles = {
+   overlay: {
+      position: "fixed",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999
+   }
+};
 
 const Create = ({placeholder}) => {
 	const editor = useRef(null);
 	const [content, setContent] = useState('');
 	const [isDisable, setIsDisable] = useState(false);
 	const [imageId, setImageId] = useState(null);
+   const [loading, setLoading] = useState(true);
 
    const config = useMemo(() => ({
 			readonly: false,
@@ -73,11 +89,24 @@ const Create = ({placeholder}) => {
          }
       });
    }
+
+   useEffect(() => {
+      const timer = setTimeout(() => {
+         setLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+   }, []);
    
    return (
       <>
          <Header/>
-         <main>
+         <main
+            style={{
+               filter: loading ? "blur(4px)" : "none",
+               transition: "filter 0.3s ease",
+               pointerEvents: loading ? "none" : "auto"
+            }}
+         >
             <div className='container my-5'>
                   <div className='row'>
                      <div className='col-md-3 mb-3'>
@@ -155,6 +184,16 @@ const Create = ({placeholder}) => {
                   </div>
             </div>
          </main>
+         {loading && (
+            <div style={styles.overlay}>
+               <Commet
+               color="#0d6efd"
+               size="large"
+               text="PLEASE WAIT"
+               textColor="#0d6efd"
+               />
+            </div>
+         )}
          <Footer/>
       </>
    )
