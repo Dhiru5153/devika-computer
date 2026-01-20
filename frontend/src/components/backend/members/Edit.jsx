@@ -210,7 +210,7 @@ const Edit = ({placeholder}) => {
                                     </div>
                                     <div className='pb-3'>
                                        {
-                                          member.image && <img src={fileUrl+'uploads/members/'+member.image} alt="" />
+                                          member.image && <img src={fileUrl+'uploads/members/'+member.image} alt="" style={{ width: '60%'}}/>
                                        }
                                     </div>
                                     <div className='mb-3'>

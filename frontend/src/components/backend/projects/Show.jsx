@@ -109,6 +109,13 @@ const Show = () => {
       return () => clearTimeout(timer);
 	}, []);
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const totalPages = Math.ceil(projects.length / rowsPerPage);
+	const startIndex = (currentPage - 1) * rowsPerPage;
+	const endIndex = startIndex + rowsPerPage;
+	const paginatedProjects = projects.slice(startIndex, endIndex);
+
 	return (
       <>
          <Header/>
@@ -134,55 +141,96 @@ const Show = () => {
                                     <Link to="/admin/projects/create" className='btn btn-primary'>Create</Link>
                                  </div>
                                  <hr />
-                                 <table className='table table-striped'>
-                                    <thead>
-                                       <tr>
-                                          <th>ID</th>
-                                          <th>Title</th>
-                                          {/* <th>Slug</th> */}
-                                          <th>Status</th>
-                                          <th>Action</th>
-                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                       {/* {loading && (
+                                 {/* Pages */}
+                                 <div className="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                       <select
+                                          className="form-select w-auto"
+                                          value={rowsPerPage}
+                                          onChange={(e) => {
+                                             setRowsPerPage(Number(e.target.value));
+                                             setCurrentPage(1);
+                                          }}
+                                          >
+                                          <option value={10}>10</option>
+                                          <option value={20}>20</option>
+                                          <option value={50}>50</option>
+                                       </select>
+                                    </div>
+                                    <div>
+                                       Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                                    </div>
+                                 </div>
+                                 <div className="table-responsive">
+                                    <table className='table table-striped'>
+                                       <thead>
                                           <tr>
-                                          <td colSpan="4" className="text-center py-4">
-                                             <div className="spinner-border text-primary" role="status"></div>
-                                          </td>
+                                             <th>ID</th>
+                                             <th>Title</th>
+                                             <th>Status</th>
+                                             <th>Action</th>
                                           </tr>
-                                       )} */}
+                                       </thead>
+                                       <tbody>
+                                          {!loading && projects.length === 0 && (
+                                             <tr>
+                                             <td colSpan="4" className="text-center py-4">
+                                                No projects found
+                                             </td>
+                                             </tr>
+                                          )}
 
-                                       {!loading && projects.length === 0 && (
-                                          <tr>
-                                          <td colSpan="4" className="text-center py-4">
-                                             No projects found
-                                          </td>
-                                          </tr>
-                                       )}
-
-                                       { !loading &&
-                                          projects && projects.map((project, index) => {
-                                             return (
-                                                <tr key={`project-${project.id}`}>
-                                                   <td>{index + 1}</td>
-                                                   <td>{project.title}</td>
-                                                   {/* <td>{project.slug}</td> */}
-                                                   <td>
-                                                      {
-                                                         (project.status == 1)? 'Active':'Block'
-                                                      }
-                                                   </td>
-                                                   <td>
-                                                      <Link to={`/admin/projects/edit/${project.id}`} className='btn btn-primary btn-sm'>Edit</Link>
-                                                      <Link onClick={() => deleteProject(project.id)} className='btn btn-secondary btn-sm ms-2'>Delete</Link>
-                                                   </td>
-                                                </tr>
-                                             )
-                                          })
-                                       }
-                                    </tbody>
-                                 </table>
+                                          { !loading &&
+                                             paginatedProjects.map((project, index) => {
+                                             // projects && projects.map((project, index) => {
+                                                return (
+                                                   <tr key={`project-${project.id}`}>
+                                                      <td>{startIndex + index + 1}</td>
+                                                      <td>{project.title}</td>
+                                                      <td>
+                                                         {
+                                                            (project.status == 1)? 'Active':'Block'
+                                                         }
+                                                      </td>
+                                                      <td>
+                                                         <Link to={`/admin/projects/edit/${project.id}`} className='btn btn-primary btn-sm'>Edit</Link>
+                                                         <Link onClick={() => deleteProject(project.id)} className='btn btn-secondary btn-sm ms-2'>Delete</Link>
+                                                      </td>
+                                                   </tr>
+                                                )
+                                             })
+                                          }
+                                       </tbody>
+                                    </table>
+                                    {/* Pagination */}
+                                    <nav>
+                                       <ul className="pagination justify-content-center mt-3">
+                                          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                             <button
+                                                className="page-link"
+                                                onClick={() => setCurrentPage(currentPage - 1)}
+                                             >Prev</button>
+                                          </li>
+                                          {[...Array(totalPages)].map((_, i) => (
+                                          <li
+                                             key={i}
+                                             className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                                          >
+                                             <button
+                                             className="page-link"
+                                             onClick={() => setCurrentPage(i + 1)}
+                                             >{i + 1}</button>
+                                          </li>
+                                          ))}
+                                          <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                                             <button
+                                                className="page-link"
+                                                onClick={() => setCurrentPage(currentPage + 1)}
+                                             >Next</button>
+                                          </li>
+                                       </ul>
+                                    </nav>
+                                 </div>
                               </div>
                         </div>
                      </div>

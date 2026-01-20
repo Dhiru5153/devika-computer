@@ -45,6 +45,11 @@ const ProjectDetail = () => {
    }
    
    useEffect(() => {
+      window.scrollTo({
+         top: 0,
+         left: 0,
+         behavior: "smooth"
+      });
       fetchProject()
       const timer = setTimeout(() => {
          setLoading(false);
@@ -176,7 +181,7 @@ const ProjectDetail = () => {
                   </div>
                </div>
             </section>
-            <section className='section-11 bg-light py-5'>
+            <section className='section-11 bg-light'>
                <ShowTestimonials/>
             </section>
          </main>

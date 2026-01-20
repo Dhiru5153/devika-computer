@@ -36,7 +36,7 @@ const Edit = ({placeholder}) => {
 
    const config = useMemo(() => ({
          readonly: false,
-         placeholder: placeholder || 'Content'
+         placeholder: placeholder || ''
       }),
       [placeholder]
    );
@@ -128,6 +128,15 @@ const Edit = ({placeholder}) => {
       return () => clearTimeout(timer);
    }, []);
 
+   const videoUrl = project?.video ? getYoutubeId(project.video) : null;
+   const [play, setPlay] = useState(false);
+   function getYoutubeId(url) {
+      const regExp =
+         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+      const match = url.match(regExp);
+      return match ? match[1] : null;
+   }
+
    return (
       <>
          <Header/>
@@ -193,17 +202,17 @@ const Edit = ({placeholder}) => {
                                           className={`form-control`} />
                                        </div>
                                        <div className='col-md-6'>
-                                          <label htmlFor="" className='form-label'>Construction Type</label>
+                                          <label htmlFor="" className='form-label'>Project Type</label>
                                           <select className='form-control'
                                              {
                                                 ...register('construction_type')
                                              }
                                           >
                                              <option value="">Project Type</option>
-                                             <option value="Residential construction">Residential construction</option>
-                                             <option value="Commercial construction">Commercial construction</option>
-                                             <option value="Industrial construction">Industrial construction</option>
-                                             <option value="Infrastructure construction">Infrastructure construction</option>
+                                             <option value="Hardware Repair & Maintenance">Hardware Repair & Maintenance</option>
+                                             <option value="Software Installation & Configuration">Software Installation & Configuration</option>
+                                             <option value="System Formatting & Upgrade">System Formatting & Upgrade</option>
+                                             <option value="CCTV & Security">CCTV & Security</option>
                                           </select>
                                        </div>
                                     </div>
@@ -220,6 +229,8 @@ const Edit = ({placeholder}) => {
                                              <option value="Health">Health</option>
                                              <option value="Education">Education</option>
                                              <option value="Corporate">Corporate</option>
+                                             <option value="Residential / Home">Residential / Home</option>
+                                             <option value="Business / Commercial">Business / Commercial</option>
                                           </select>
                                        </div>
                                        <div className='col-md-6'>
@@ -264,9 +275,46 @@ const Edit = ({placeholder}) => {
 													type="text" 
 													className='form-control' />
 												</div>
-
-
-
+                                    
+                                    <div className='mb-3'>
+                                       { !loading && project?.video ? (
+                                          <div className="w-100 h-100">
+                                             {!play ? (
+                                                <div
+                                                   className="position-relative cursor-pointer"
+                                                   onClick={() => setPlay(true)}
+                                                >
+                                                   {/* Poster */}
+                                                   <img
+                                                   src={`https://img.youtube.com/vi/${videoUrl}/maxresdefault.jpg`}
+                                                   alt="YouTube Poster"
+                                                   className="img-fluid w-100 h-100 rounded"
+                                                   />
+                                                   {/* Play Icon */}
+                                                   <span
+                                                   className="position-absolute top-50 start-50 translate-middle 
+                                                               fs-1 text-white bg-dark bg-opacity-50 
+                                                               rounded-circle d-flex align-items-center 
+                                                               justify-content-center"
+                                                   style={{ width: "80px", height: "80px" }}
+                                                   >
+                                                   ▶
+                                                   </span>
+                                                </div>
+                                             ) : (
+                                                <div className="ratio ratio-16x9">
+                                                   <iframe
+                                                   src={`https://www.youtube.com/embed/${videoUrl}?autoplay=0`}
+                                                   title="YouTube video"
+                                                   allow="autoplay; encrypted-media"
+                                                   allowFullScreen
+                                                   ></iframe>
+                                                </div>
+                                             )}
+                                             </div>
+                                       ) : null}
+                                    </div>
+                                    
                                     <div className='mb-3'>
                                        <label htmlFor="" className='form-label'>Image</label>
                                        <br />
@@ -274,7 +322,7 @@ const Edit = ({placeholder}) => {
                                     </div>
                                     <div className='pb-3'>
                                        {
-                                          project.image && <img src={fileUrl+'uploads/projects/small/'+project.image} alt="" />
+                                          !loading && project.image && <img src={fileUrl+'uploads/projects/small/'+project.image} alt="" style={{ width: '60%'}}/>
                                        }
                                     </div>
                                     

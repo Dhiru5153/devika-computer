@@ -121,6 +121,15 @@ const Edit = ({placeholder}) => {
       return () => clearTimeout(timer);
    }, []);
 
+   const videoUrl = article?.video ? getYoutubeId(article.video) : null;
+   const [play, setPlay] = useState(false);
+   function getYoutubeId(url) {
+      const regExp =
+         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+      const match = url.match(regExp);
+      return match ? match[1] : null;
+   }
+   
    return (
       <>
          <Header/>
@@ -205,8 +214,44 @@ const Edit = ({placeholder}) => {
 													type="text" 
 													className='form-control' />
 												</div>
-
-
+                                    <div className='mb-3'>
+                                       { !loading && article?.video ? (
+                                          <div className="w-100 h-100">
+                                             {!play ? (
+                                                <div
+                                                   className="position-relative cursor-pointer"
+                                                   onClick={() => setPlay(true)}
+                                                >
+                                                   {/* Poster */}
+                                                   <img
+                                                   src={`https://img.youtube.com/vi/${videoUrl}/maxresdefault.jpg`}
+                                                   alt="YouTube Poster"
+                                                   className="img-fluid w-100 h-100 rounded"
+                                                   />
+                                                   {/* Play Icon */}
+                                                   <span
+                                                   className="position-absolute top-50 start-50 translate-middle 
+                                                               fs-1 text-white bg-dark bg-opacity-50 
+                                                               rounded-circle d-flex align-items-center 
+                                                               justify-content-center"
+                                                   style={{ width: "80px", height: "80px" }}
+                                                   >
+                                                   ▶
+                                                   </span>
+                                                </div>
+                                             ) : (
+                                                <div className="ratio ratio-16x9">
+                                                   <iframe
+                                                   src={`https://www.youtube.com/embed/${videoUrl}?autoplay=0`}
+                                                   title="YouTube video"
+                                                   allow="autoplay; encrypted-media"
+                                                   allowFullScreen
+                                                   ></iframe>
+                                                </div>
+                                             )}
+                                             </div>
+                                       ) : null}
+                                    </div>
 
                                     <div className='mb-3'>
                                        <label htmlFor="" className='form-label'>Image</label>
@@ -215,7 +260,7 @@ const Edit = ({placeholder}) => {
                                     </div>
                                     <div className='pb-3'>
                                        {
-                                          article.image && <img src={fileUrl+'uploads/articles/small/'+article.image} alt="" />
+                                          !loading && article.image && <img src={fileUrl+'uploads/articles/small/'+article.image} alt="" style={{ width: '60%'}}/>
                                        }
                                     </div>
                                     <div className='mb-3'>

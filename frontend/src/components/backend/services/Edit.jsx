@@ -116,38 +116,22 @@ const Edit = ({placeholder}) => {
       });
    }
 
-   // const handleVideo = async (e) => {
-   //    const formData = new FormData();
-   //    const file = e.target.files[0];
-   //    formData.append("video", file);
-   //    setIsDisable(true);
-
-   //    await fetch(apiUrl+'temp-video', {
-   //       method: 'POST',
-   //       headers: {
-   //          'Accept': 'application/json',
-   //          'Authorization': `Bearer ${token()}`
-   //       },
-   //       body: formData
-   //    })
-   //    .then(res => res.json())
-   //    .then(result => {
-   //       setIsDisable(false);
-   //       if (result.status === false) {
-   //          toast.error(result.errors.video[0]);
-   //       } else {
-   //          setVideoId(result.data.id);
-   //       }
-   //    });
-   // }
-
    useEffect(() => {
       const timer = setTimeout(() => {
          setLoading(false);
       }, 1500);
       return () => clearTimeout(timer);
    }, []);
-   
+
+   const videoUrl = service?.video ? getYoutubeId(service.video) : null;
+   const [play, setPlay] = useState(false);
+   function getYoutubeId(url) {
+      const regExp =
+         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+      const match = url.match(regExp);
+      return match ? match[1] : null;
+   }
+
    return (
       <>
          <Header/>
@@ -222,18 +206,6 @@ const Edit = ({placeholder}) => {
                                        />
                                     </div>
 
-
-                                    {/* <div className='mb-3'>
-                                       <label htmlFor="" className='form-label'>Video</label>
-                                       <input onChange={handleVideo} type="file" accept="video/*" className='form-control'/>
-                                    </div>
-
-                                    {service.video && (
-                                       <video width="300" controls>
-                                          <source src={fileUrl+'uploads/services/video/'+service.video} />
-                                       </video>
-                                    )} */}
-                                    
 												<div className='mb-3'>
 													<label htmlFor="" className='form-label'>YouTube URL</label>
 													<input placeholder='YouTube URL'
@@ -243,9 +215,45 @@ const Edit = ({placeholder}) => {
 													type="text" 
 													className='form-control' />
 												</div>
-
-
-
+                                    
+                                    <div className='mb-3'>
+                                       { !loading && service?.video ? (
+                                          <div className="w-100 h-100">
+                                             {!play ? (
+                                                <div
+                                                   className="position-relative cursor-pointer"
+                                                   onClick={() => setPlay(true)}
+                                                >
+                                                   {/* Poster */}
+                                                   <img
+                                                   src={`https://img.youtube.com/vi/${videoUrl}/maxresdefault.jpg`}
+                                                   alt="YouTube Poster"
+                                                   className="img-fluid w-100 h-100 rounded"
+                                                   />
+                                                   {/* Play Icon */}
+                                                   <span
+                                                   className="position-absolute top-50 start-50 translate-middle 
+                                                               fs-1 text-white bg-dark bg-opacity-50 
+                                                               rounded-circle d-flex align-items-center 
+                                                               justify-content-center"
+                                                   style={{ width: "80px", height: "80px" }}
+                                                   >
+                                                   ▶
+                                                   </span>
+                                                </div>
+                                             ) : (
+                                                <div className="ratio ratio-16x9">
+                                                   <iframe
+                                                   src={`https://www.youtube.com/embed/${videoUrl}?autoplay=0`}
+                                                   title="YouTube video"
+                                                   allow="autoplay; encrypted-media"
+                                                   allowFullScreen
+                                                   ></iframe>
+                                                </div>
+                                             )}
+                                             </div>
+                                       ) : null}
+                                    </div>
                                     <div className='mb-3'>
                                        <label htmlFor="" className='form-label'>Image</label>
                                        <br />
@@ -253,7 +261,7 @@ const Edit = ({placeholder}) => {
                                     </div>
                                     <div className='pb-3'>
                                        {
-                                          service.image && <img src={fileUrl+'uploads/services/small/'+service.image} alt="" />
+                                          !loading && service.image && <img src={fileUrl+'uploads/services/small/'+service.image} alt="" style={{ width: '60%'}}/>
                                        }
                                     </div>
                                     <div className='mb-3'>

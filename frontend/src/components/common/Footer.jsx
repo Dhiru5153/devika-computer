@@ -40,7 +40,7 @@ const Footer = () => {
                      }
                   </ul>
                </div>
-               <div className='col-md-3'>
+               <div className='col-md-2'>
                   <h3 className='mb-3'>Quick Links</h3>
                   <ul>
                      <li>
@@ -56,14 +56,14 @@ const Footer = () => {
                         <a href='/projects'>Projects</a>
                      </li>
                      <li>
-                        <a href='blogs'>Blog</a>
+                        <a href='/blogs'>Blog</a>
                      </li>
                      <li>
                         <a href='/contact'>Contact Us</a>
                      </li>
                   </ul>
                </div>
-               <div className='col-md-3'>
+               <div className='col-md-4'>
                   <h3 className='mb-3'>Contact Us</h3>
                   <ul>
                      <li>
@@ -89,7 +89,7 @@ const Footer = () => {
                         </a>
                      </li>
                      <li>
-                           <p>Near Bank of Baroda, Main Road Bagbahara, Mahasamund (C.G.)</p>
+                        <p>Near Bank of Baroda, Main Road Bagbahara, Mahasamund (C.G.)</p>
                      </li>
                   </ul>
                </div>

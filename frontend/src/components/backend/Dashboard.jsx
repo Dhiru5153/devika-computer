@@ -47,7 +47,7 @@ const Dashboard = () => {
                         {/* Dashboard */}
                         <div className='card shadow border-0'>
                             <div className='card-body d-flex justify-content-center align-items-center'>
-                                <h4>Welcome to admin console</h4>
+                                <h4>Welcome to Admin Dashboard</h4>
                             </div>
                         </div>
                     </div>

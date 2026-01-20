@@ -70,6 +70,21 @@ a{
     }
 }
 
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table td,
+.table th {
+    white-space: nowrap;
+}
+
+.table td:nth-child(2) {
+    white-space: normal;
+    min-width: 300px;
+    max-width: 400px;
+}
+
 .section-header{
     span{
         color: $primary-color;
@@ -101,6 +116,9 @@ header{
             text-transform: uppercase;
             font-weight: 500;
             span{
+                color: $primary-color;
+            }
+            &:hover{
                 color: $primary-color;
             }
         }
@@ -230,6 +248,14 @@ footer{
             .content{
                 p{
                     font-size: 1em;
+                    span{
+                        color: $primary-color;
+                        cursor: pointer;
+                        font-size: 17px;
+                        &:hover{
+                            color: $secondary-color;
+                        }
+                    }
                 }
             }
             .meta{

@@ -165,17 +165,17 @@ const Create = ({placeholder}) => {
                                           className={`form-control`} />
                                        </div>
                                        <div className='col-md-6'>
-                                          <label htmlFor="" className='form-label'>Construction Type</label>
+                                          <label htmlFor="" className='form-label'>Project Type</label>
                                           <select className='form-control'
                                              {
                                                 ...register('construction_type')
                                              }
                                           >
                                              <option value="">Project Type</option>
-                                             <option value="Residential construction">Residential construction</option>
-                                             <option value="Commercial construction">Commercial construction</option>
-                                             <option value="Industrial construction">Industrial construction</option>
-                                             <option value="Infrastructure construction">Infrastructure construction</option>
+                                             <option value="Hardware Repair & Maintenance">Hardware Repair & Maintenance</option>
+                                             <option value="Software Installation & Configuration">Software Installation & Configuration</option>
+                                             <option value="System Formatting & Upgrade">System Formatting & Upgrade</option>
+                                             <option value="CCTV & Security">CCTV & Security</option>
                                           </select>
                                        </div>
                                     </div>
@@ -192,6 +192,8 @@ const Create = ({placeholder}) => {
                                              <option value="Health">Health</option>
                                              <option value="Education">Education</option>
                                              <option value="Corporate">Corporate</option>
+                                             <option value="Residential / Home">Residential / Home</option>
+                                             <option value="Business / Commercial">Business / Commercial</option>
                                           </select>
                                        </div>
                                        <div className='col-md-6'>

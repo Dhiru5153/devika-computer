@@ -82,6 +82,13 @@ const Show = () => {
 		return () => clearTimeout(timer);
 	}, []);
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const totalPages = Math.ceil(members.length / rowsPerPage);
+	const startIndex = (currentPage - 1) * rowsPerPage;
+	const endIndex = startIndex + rowsPerPage;
+	const paginatedMembers = members.slice(startIndex, endIndex);
+
 	return (
 		<>
 			<Header/>
@@ -93,77 +100,115 @@ const Show = () => {
 				}}
 			>
 				<div className='container my-5'>
-						<div className='row'>
-							<div className='col-md-3 mb-3'>
-								{/* Sidebar */}
-								<Sidebar/>
-							</div>
-							<div className='col-md-9'>
-								{/* Dashboard */}
-								<div className='card shadow border-0'>
-										<div className='card-body p-4'>
-											<div className='d-flex justify-content-between'>
-												<h4 className='h5'>Member</h4>
-												<Link to="/admin/members/create" className='btn btn-primary'>Create</Link>
-											</div>
-											<hr />
-											<table className='table table-striped'>
-												<thead>
-													<tr>
-														<th>ID</th>
-														<th>Name</th>
-														<th>Job Title</th>
-														{/* <th>Instagram</th>
-														<th>LinkedIn</th> */}
-														<th>Status</th>
-														<th>Action</th>
-													</tr>
-												</thead>
-												<tbody>
-													{/* {loading && (
-														<tr>
-														<td colSpan="5" className="text-center py-4">
-															<div className="spinner-border text-primary" role="status"></div>
-														</td>
-														</tr>
-													)} */}
-
-													{!loading && members.length === 0 && (
-														<tr>
-														<td colSpan="5" className="text-center py-4">
-															No members found
-														</td>
-														</tr>
-													)}
-
-													{ !loading &&
-														members && members.map((member, index) => {
-															return (
-																<tr key={`member-${member.id}`}>
-																	<td>{index + 1}</td>
-																	<td>{member.name}</td>
-																	<td>{member.job_title}</td>
-																	{/* <td>{member.instagram_url}</td>
-																	<td>{member.linkedin_url}</td> */}
-																	<td>
-																		{
-																			(member.status == 1)? 'Active':'Block'
-																		}
-																	</td>
-																	<td>
-																		<Link to={`/admin/members/edit/${member.id}`} className='btn btn-primary btn-sm'>Edit</Link>
-																		<Link onClick={() => deleteMember(member.id)} className='btn btn-secondary btn-sm ms-2'>Delete</Link>
-																	</td>
-																</tr>
-															)
-														})
-													}
-												</tbody>
-											</table>
+					<div className='row'>
+						{/* Sidebar */}
+						<div className='col-md-3 mb-3'>
+							<Sidebar/>
+						</div>
+						{/* Dashboard */}
+						<div className='col-md-9'>
+							<div className='card shadow border-0'>
+								<div className='card-body p-4'>
+									<div className='d-flex justify-content-between'>
+										<h4 className='h5'>Member</h4>
+										<Link to="/admin/members/create" className='btn btn-primary'>Create</Link>
+									</div>
+									<hr />
+									{/* Pages */}
+									<div className="d-flex justify-content-between align-items-center mb-3">
+										<div>
+											<select
+												className="form-select w-auto"
+												value={rowsPerPage}
+												onChange={(e) => {
+													setRowsPerPage(Number(e.target.value));
+													setCurrentPage(1);
+												}}
+												>
+												<option value={10}>10</option>
+												<option value={20}>20</option>
+												<option value={50}>50</option>
+											</select>
 										</div>
+										<div>
+											Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+										</div>
+									</div>
+									<div className="table-responsive">
+										<table className='table table-striped'>
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Name</th>
+													<th>Job Title</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												{!loading && members.length === 0 && (
+													<tr>
+													<td colSpan="5" className="text-center py-4">
+														No members found
+													</td>
+													</tr>
+												)}
+												{ !loading &&
+													paginatedMembers.map((member, index) => {
+													// members && members.map((member, index) => {
+														return (
+															<tr key={`member-${member.id}`}>
+																<td>{startIndex + index + 1}</td>
+																<td>{member.name}</td>
+																<td>{member.job_title}</td>
+																<td>
+																	{
+																		(member.status == 1)? 'Active':'Block'
+																	}
+																</td>
+																<td>
+																	<Link to={`/admin/members/edit/${member.id}`} className='btn btn-primary btn-sm'>Edit</Link>
+																	<Link onClick={() => deleteMember(member.id)} className='btn btn-secondary btn-sm ms-2'>Delete</Link>
+																</td>
+															</tr>
+														)
+													})
+												}
+											</tbody>
+										</table>
+										{/* Pagination */}
+										<nav>
+											<ul className="pagination justify-content-center mt-3">
+												<li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+													<button
+														className="page-link"
+														onClick={() => setCurrentPage(currentPage - 1)}
+													>Prev</button>
+												</li>
+												{[...Array(totalPages)].map((_, i) => (
+												<li
+													key={i}
+													className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+												>
+													<button
+													className="page-link"
+													onClick={() => setCurrentPage(i + 1)}
+													>{i + 1}</button>
+												</li>
+												))}
+												<li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+													<button
+														className="page-link"
+														onClick={() => setCurrentPage(currentPage + 1)}
+													>Next</button>
+												</li>
+											</ul>
+										</nav>
+									</div>
 								</div>
 							</div>
 						</div>
+					</div>
 				</div>
 			</main>
 			{loading && (

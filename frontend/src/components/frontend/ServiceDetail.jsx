@@ -54,6 +54,11 @@ const ServiceDetail = () => {
       setServices(result.data);
    }
    useEffect(() => {
+      window.scrollTo({
+         top: 0,
+         left: 0,
+         behavior: "smooth"
+      });
       fetchService();
       fetchAllServices();
       
@@ -112,12 +117,6 @@ const ServiceDetail = () => {
                      <div className='col-md-9'>
                         {/* Video */}
                         <div>
-                           {/* {loading && (
-                              <div className="text-center py-4">
-                                 <div className="spinner-border text-primary" role="status"></div>
-                              </div>
-                           )} */}
-
                            {!loading && service.length === 0 && (
                               <div className="text-center py-4">
                                  No service found
@@ -181,7 +180,7 @@ const ServiceDetail = () => {
                   </div>
                </div>
             </section>
-            <section className='section-11 bg-light py-5'>
+            <section className='section-11 bg-light'>
                <ShowTestimonials/>
             </section>
          </main>

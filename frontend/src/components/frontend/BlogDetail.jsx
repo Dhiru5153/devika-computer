@@ -53,7 +53,13 @@ const BlogDetail = () => {
       // console.log(result);
       setLatestArticles(result.data);
    }
+
    useEffect(() => {
+      window.scrollTo({
+         top: 0,
+         left: 0,
+         behavior: "smooth"
+      });
       fetchArticle()
       fetchLatestArticles();
       const timer = setTimeout(() => {
@@ -179,7 +185,7 @@ const BlogDetail = () => {
                   </div>
                </div>
             </section>
-            <section className='section-11 bg-light py-5'>
+            <section className='section-11 bg-light'>
                <ShowTestimonials/>
             </section>
          </main>
