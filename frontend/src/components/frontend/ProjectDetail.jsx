@@ -130,40 +130,15 @@ const ProjectDetail = () => {
 
                            { !loading && project?.video ? (
                               <div className="w-100 h-100">
-                                 {!play ? (
-                                    <div
-                                       className="position-relative cursor-pointer"
-                                       onClick={() => setPlay(true)}
-                                    >
-                                       {/* Poster */}
-                                       <img
-                                       src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-                                       alt="YouTube Poster"
-                                       className="img-fluid w-100 h-100 rounded"
-                                       />
-
-                                       {/* Play Icon */}
-                                       <span
-                                       className="position-absolute top-50 start-50 translate-middle 
-                                                   fs-1 text-white bg-dark bg-opacity-50 
-                                                   rounded-circle d-flex align-items-center 
-                                                   justify-content-center"
-                                       style={{ width: "80px", height: "80px" }}
-                                       >
-                                       ▶
-                                       </span>
-                                    </div>
-                                 ) : (
-                                    <div className="ratio ratio-16x9">
-                                       <iframe
-                                       src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
-                                       title="YouTube video"
-                                       allow="autoplay; encrypted-media"
-                                       allowFullScreen
-                                       ></iframe>
-                                    </div>
-                                 )}
+                                 <div className="ratio ratio-16x9">
+                                    <iframe
+                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
+                                    title="YouTube video"
+                                    allow="autoplay; encrypted-media"
+                                    allowFullScreen
+                                    ></iframe>
                                  </div>
+                              </div>
                            ) : project?.image ? (
                               <img
                                  src={`${fileUrl}uploads/projects/large/${project.image}`}
