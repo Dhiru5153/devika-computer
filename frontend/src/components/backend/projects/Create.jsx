@@ -154,8 +154,8 @@ const Create = ({placeholder}) => {
                                        }
                                     </div>
 
-                                    <div className='row mb-3'>
-                                       <div className='col-md-6'>
+                                    <div className='row'>
+                                       <div className='col-md-6 mb-3'>
                                           <label htmlFor="" className='form-label'>Location</label>
                                           <input placeholder='Location'
                                           {
@@ -164,7 +164,7 @@ const Create = ({placeholder}) => {
                                           type="text" 
                                           className={`form-control`} />
                                        </div>
-                                       <div className='col-md-6'>
+                                       <div className='col-md-6 mb-3'>
                                           <label htmlFor="" className='form-label'>Project Type</label>
                                           <select className='form-control'
                                              {
@@ -180,8 +180,8 @@ const Create = ({placeholder}) => {
                                        </div>
                                     </div>
 
-                                    <div className='row mb-3'>
-                                       <div className='col-md-6'>
+                                    <div className='row'>
+                                       <div className='col-md-6 mb-3'>
                                           <label htmlFor="" className='form-label'>Sector</label>
                                           <select className='form-control'
                                              {
@@ -196,7 +196,7 @@ const Create = ({placeholder}) => {
                                              <option value="Business / Commercial">Business / Commercial</option>
                                           </select>
                                        </div>
-                                       <div className='col-md-6'>
+                                       <div className='col-md-6 mb-3'>
                                           <label htmlFor="" className='form-label'>Status</label>
                                           <select
                                           {
